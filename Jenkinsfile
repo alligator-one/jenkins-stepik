@@ -4,31 +4,38 @@
 pipeline {
     agent any
     stages {
-        stage('Hello') {
+        stage('Prepare') {
             steps {
-                echo 'Привет от Jenkins!'
-                echo 'Сегодняшняя дата:'
-                sh 'date'
+                echo 'Stage Prepare'
+                sh 'mkdir -p build logs temp'
+                echo 'Directories created'				
             }
         }
 
-        stage('System Info') {
+        stage('Build') {
             steps {
-                echo 'Информация о системе:'
-                echo 'Операционная система:'
-                sh 'uname -a'
-                echo 'Текущая директория:'
-                sh 'pwd'
-                echo 'Список файлов:'
-                sh 'ls -la'
+                echo 'Stage Build'
+                sh 'echo "Build version: 1.0.0" > build/version.txt'
+				sh 'date >> build/version.txt'
+				echo 'Build completed'
             }
         }
-		stage('Environment') {
+		stage('Verify') {
 			steps {
-				echo "Build Number: ${BUILD_NUMBER}"
-				echo "Job Name: ${JOB_NAME}"
-				echo "Workspace: ${WORKSPACE}"
+				echo "Verifying build..."
+                sh 'cat build/version.txt'
+				sh 'ls -la build/'
+				echo "Verification completed"
 			}
 		}
+		stage('System Info') {
+			steps {
+				echo "System Info"
+                sh 'whoami'
+				sh 'df -h .'
+				echo "Build Number: ${BUILD_NUMBER}"
+				echo "Build Number: ${JOB_NAME}"				
+			}
+		}		
     }
 }
