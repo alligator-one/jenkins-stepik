@@ -33,8 +33,8 @@ pipeline {
 				echo "System Info"
                 sh 'whoami'
 				sh 'df -h .'
-				echo "Build Number: ${BUILD_NUMBER}"
-				echo "Build Number: ${JOB_NAME}"				
+				echo "Build Number: ${env.BUILD_NUMBER}"
+				echo "Build Number: ${env.JOB_NAME}"				
 			}
 		}		
     }
