@@ -36,6 +36,14 @@ pipeline {
 				echo "Build Number: ${env.BUILD_NUMBER}"
 				echo "Build Number: ${env.JOB_NAME}"				
 			}
+		}
+		stage('Cleanup') {
+			steps {
+				echo 'Cleaning up temporary files...'
+				sh 'rm -rf temp logs'
+				sh 'ls -la'
+				echo 'Cleanup completed'
+			}
 		}		
     }
 }
