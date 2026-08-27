@@ -1,34 +1,25 @@
 pipeline {
-    agent none
+    agent any
     stages {
-        stage('Check Agent') {
-            agent any
-			steps {
-                echo 'Running on agent'
-                sh 'hostname'
-                echo "Build Number: ${env.WORKSPACE}"
-				echo "Build Number: ${env.NODE_NAME}"
+        stage('Variables Demo') {
+            steps {
+                script {
+                    def appName = 'MyApplication'
+                    def port = '8080'
+                    def isProduction = false
+                    echo appName
+                    echo port
+                    echo isProduction.toString()   // fix here
+                }
             }
         }
-        stage('Build Info') {
-            agent any
-			steps {
-                echo 'Build information...'
-                echo "Build Number: ${env.BUILD_NUMBER}"
-				echo "Build Number: ${env.BUILD_ID}"
-                echo "Build Number: ${env.BUILD_URL}"				
+        stage('String Operations') {
+            steps {
+                script {
+                    def message = 'Jenkins Pipeline Tutorial'
+                    echo "Length: ${message.length()}"
+                }
             }
         }
-		stage('System Details') {
-			agent any
-			steps {
-                sh 'uname -a'
-                sh 'whoami'
-                sh 'pwd'
-                sh 'ls -la'
-                sh 'free -h'
-                sh 'date'
-			}
-		}
     }
 }
