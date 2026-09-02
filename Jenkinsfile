@@ -7,16 +7,16 @@ pipeline {
 
     stages {
         stage('Checkout') {
-			steps {
-				checkout scm
-			}
-		}
-        // Часть 1: Условие по ветке		
-		stage('Build') {
+            steps {
+                checkout scm
+            }
+        }
+
+        // Часть 1: Условие по ветке
+        stage('Build') {
             steps {
                 echo "Building application..."
                 echo "Current branch: ${env.BRANCH_NAME}"
-				echo "Current branch: ${env.GIT_BRANCH}"
             }
         }
 
@@ -72,18 +72,12 @@ pipeline {
             }
         }
 
-        // Часть 4: Комбинированные условия
+        // Часть 4: Комбинированные условия (исправлено)
         stage('Security Scan') {
             when {
-                allOf {
-                    anyOf {
-                        branch 'main'
-                        branch 'develop'
-                    }
-                    anyOf {
-                        environment name: 'DEPLOY_ENV', value: 'staging'
-                        environment name: 'DEPLOY_ENV', value: 'production'
-                    }
+                expression {
+                    (env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'develop') &&
+                    (env.DEPLOY_ENV == 'staging' || env.DEPLOY_ENV == 'production')
                 }
             }
             steps {
@@ -103,4 +97,4 @@ pipeline {
             }
         }
     }
-}git s 
+}
