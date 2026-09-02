@@ -6,11 +6,17 @@ pipeline {
     }
 
     stages {
-        // Часть 1: Условие по ветке
-        stage('Build') {
+        stage('Checkout') {
+			steps {
+				checkout scm
+			}
+		}
+        // Часть 1: Условие по ветке		
+		stage('Build') {
             steps {
                 echo "Building application..."
                 echo "Current branch: ${env.BRANCH_NAME}"
+				echo "Current branch: ${env.GIT_BRANCH}"
             }
         }
 
@@ -97,4 +103,4 @@ pipeline {
             }
         }
     }
-}
+}git s 
