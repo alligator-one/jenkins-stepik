@@ -3,12 +3,22 @@ pipeline {
 
     environment {
         DEPLOY_ENV = 'staging'
+        // Для удобства объявим переменную, но заполним позже
     }
 
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
+                script {
+                    // Получаем имя текущей ветки и сохраняем в env.BRANCH_NAME (переопределяем)
+                    env.BRANCH_NAME = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    // Если команда не сработает (например, в detached HEAD), используем запасной вариант:
+                    if (env.BRANCH_NAME == 'HEAD') {
+                        env.BRANCH_NAME = sh(script: 'git name-rev --name-only HEAD', returnStdout: true).trim()
+                    }
+                    echo "Detected branch: ${env.BRANCH_NAME}"
+                }
             }
         }
 
@@ -82,7 +92,7 @@ pipeline {
             }
             steps {
                 echo "Running security scan"
-                echo "Branch: ${env.BRANCH_NAME}, Environment: ${DEPLOY_ENV}"
+                echo "Branch: ${env.BRANCH_NAME}, Environment: ${env.DEPLOY_ENV}"
             }
         }
 
@@ -92,7 +102,7 @@ pipeline {
                 echo "=== Pipeline Execution Summary ==="
                 echo "Branch: ${env.BRANCH_NAME}"
                 echo "Build Number: ${env.BUILD_NUMBER}"
-                echo "Deploy Environment: ${DEPLOY_ENV}"
+                echo "Deploy Environment: ${env.DEPLOY_ENV}"
                 echo "All stages completed"
             }
         }
