@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DEPLOY_ENV = 'staging'
+        DEPLOY_ENV = 'production'
         // CURRENT_BRANCH будет заполнена позже в стейдже Checkout
     }
 
